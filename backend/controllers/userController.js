@@ -112,8 +112,36 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @access Private/Admin
 
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({})
-  res.status(200).json(users)
+  const pageSize = Number(req.query.pageSize) || 5
+  const page = Number(req.query.pageNumber) || 1
+  const sortBy = req.query.sortBy || '_id'
+  const sortOrder = Number(req.query.sortOrder) || 1
+
+  const count = await User.countDocuments({})
+
+  const users = await User.aggregate([
+    {
+      $project: {
+        name: 1,
+        email: 1,
+        isAdmin: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        loweritem: { $toLower: `$${sortBy}` }
+      }
+    },
+    { $sort: { loweritem: sortOrder } },
+    { $skip: pageSize * (page - 1) },
+    { $limit: pageSize }
+  ])
+
+  //aggregate is used above instead of the following to ensure case insensitive alphabetical sorting
+  /* const users = await User.find({})
+    .sort({ [sortBy]: 1 })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1)) */
+
+  res.status(200).json({ users, page, pages: Math.ceil(count / pageSize) })
 })
 
 // @desc Get User By Id

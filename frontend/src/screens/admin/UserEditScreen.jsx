@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import Message from '../../components/Message'
@@ -10,12 +10,11 @@ import {
   useUpdateUserMutation,
   useGetUserDetailsQuery
 } from '../../slices/usersApiSlice'
+import { userEditForm } from '../../forms/form-objects/userEditForm'
+import useForm from '../../forms/form-hooks/useForm'
 
 const UserEditScreen = () => {
   const { id: userId } = useParams()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [isAdmin, setIsAdmin] = useState(false)
 
   const {
     data: user,
@@ -28,22 +27,34 @@ const UserEditScreen = () => {
 
   const navigate = useNavigate()
 
+  const {
+    renderFormInputs,
+    isFormValid,
+    getFormValues,
+    setInitialState,
+    changesMade
+  } = useForm(userEditForm)
+
   useEffect(() => {
     if (user) {
-      setName(user.name)
-      setEmail(user.email)
-      setIsAdmin(user.isAdmin)
+      setInitialState({
+        name: user.name,
+        email: user.email,
+        role: user.isAdmin
+      })
     }
-  }, [user])
+  }, [setInitialState, user])
 
   const submitHandler = async (e) => {
+    const { name, email, role } = getFormValues()
+
     e.preventDefault()
     try {
       await updateUser({
         userId,
         name,
         email,
-        isAdmin
+        isAdmin: role
       }).unwrap() // NOTE: here we need to unwrap the Promise to catch any rejection in our catch block
       toast.success('User updated')
       refetch()
@@ -67,36 +78,22 @@ const UserEditScreen = () => {
           <Message variant='danger'>{error}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
-            <Form.Group className='my-2' controlId='name'>
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type='name'
-                placeholder='Enter name'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-
-            <Form.Group className='my-2' controlId='email'>
-              <Form.Label>Email Address</Form.Label>
-              <Form.Control
-                type='email'
-                placeholder='Enter email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-
-            <Form.Group className='my-2' controlId='isadmin'>
-              <Form.Check
-                type='checkbox'
-                label='Is Admin'
-                checked={isAdmin}
-                onChange={(e) => setIsAdmin(e.target.checked)}
-              ></Form.Check>
-            </Form.Group>
-
-            <Button type='submit' variant='primary'>
+            {renderFormInputs()}
+            <Button
+              type='submit'
+              variant='primary'
+              disabled={
+                !isFormValid ||
+                !changesMade(
+                  {
+                    name: user.name,
+                    email: user.email,
+                    role: user.isAdmin
+                  },
+                  getFormValues()
+                )
+              }
+            >
               Update
             </Button>
           </Form>
