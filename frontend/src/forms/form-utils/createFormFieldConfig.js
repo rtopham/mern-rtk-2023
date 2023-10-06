@@ -7,11 +7,12 @@ export const createFormFieldConfig = (field) => {
     renderInput: (handleChange, value, isValid, error, key) => {
       return (
         <InputField
+          {...field}
           key={key}
-          name={name}
-          type={type}
-          label={label}
-          placeholder={placeholder}
+          //name={name}
+          //type={type}
+          //label={label}
+          //placeholder={placeholder}
           isValid={isValid}
           value={value}
           handleChange={handleChange}
