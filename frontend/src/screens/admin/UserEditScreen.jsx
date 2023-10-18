@@ -10,8 +10,9 @@ import {
   useUpdateUserMutation,
   useGetUserDetailsQuery
 } from '../../slices/usersApiSlice'
-import { userEditForm } from '../../forms/form-objects/userEditForm'
-import useForm from '../../forms/form-hooks/useForm'
+
+import { userEditForm } from '../../forms-2/form-objects/userEditForm'
+import useForm from '../../forms-2/form-hooks/useForm'
 
 const UserEditScreen = () => {
   const { id: userId } = useParams()
@@ -30,10 +31,11 @@ const UserEditScreen = () => {
   const {
     renderFormInputs,
     isFormValid,
-    getFormValues,
+    initialStateValues,
+    values,
     setInitialState,
     changesMade
-  } = useForm(userEditForm)
+  } = useForm(userEditForm, { name: '', email: '', isAdmin: false })
 
   useEffect(() => {
     if (user) {
@@ -46,7 +48,7 @@ const UserEditScreen = () => {
   }, [setInitialState, user])
 
   const submitHandler = async (e) => {
-    const { name, email, role } = getFormValues()
+    const { name, email, role } = values
 
     e.preventDefault()
     try {
@@ -83,15 +85,7 @@ const UserEditScreen = () => {
               type='submit'
               variant='primary'
               disabled={
-                !isFormValid ||
-                !changesMade(
-                  {
-                    name: user.name,
-                    email: user.email,
-                    role: user.isAdmin
-                  },
-                  getFormValues()
-                )
+                !isFormValid || !changesMade(initialStateValues, values)
               }
             >
               Update

@@ -1,17 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
-//import { FaShoppingCart, FaUser } from 'react-icons/fa'
 import { Icon, USER_ICON } from './icons'
 import { LinkContainer } from 'react-router-bootstrap'
 import { useSelector, useDispatch } from 'react-redux'
 import { useLogoutMutation } from '../slices/usersApiSlice'
 import { logout } from '../slices/authSlice'
 import logo from '../assets/logo.png'
-//import SearchBox from './SearchBox'
-//import { resetCart } from '../slices/cartSlice'
 
 const Header = () => {
-  //const { cartItems } = useSelector((state) => state.cart)
   const { userInfo } = useSelector((state) => state.auth)
 
   const dispatch = useDispatch()
@@ -23,7 +19,6 @@ const Header = () => {
     try {
       await logoutApiCall().unwrap()
       dispatch(logout())
-      //dispatch(resetCart())
       navigate('/login')
     } catch (error) {
       console.log(error)
@@ -66,6 +61,9 @@ const Header = () => {
                   </LinkContainer>
                   <LinkContainer to='/admin/formtest'>
                     <NavDropdown.Item>Form Test</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/formtest2'>
+                    <NavDropdown.Item>Form Test 2</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               )}

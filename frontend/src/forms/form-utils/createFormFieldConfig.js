@@ -1,7 +1,7 @@
 import InputField from '../form-components/InputField'
 
 export const createFormFieldConfig = (field) => {
-  const { label, name, type, placeholder, defaultValue = '' } = field
+  const { label, placeholder, defaultValue = '' } = field
 
   return {
     renderInput: (handleChange, value, isValid, error, key) => {
@@ -12,7 +12,7 @@ export const createFormFieldConfig = (field) => {
           //name={name}
           //type={type}
           //label={label}
-          //placeholder={placeholder}
+          placeholder={placeholder}
           isValid={isValid}
           value={value}
           handleChange={handleChange}

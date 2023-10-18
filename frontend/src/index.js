@@ -24,6 +24,7 @@ import UserListScreen from './screens/admin/UserListScreen'
 import UserEditScreen from './screens/admin/UserEditScreen'
 import FormTestScreen from './screens/admin/FormTestScreen'
 import reportWebVitals from './reportWebVitals'
+import FormTestScreen2 from './screens/admin/FormTestScreen2'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +39,7 @@ const router = createBrowserRouter(
       <Route path='' element={<AdminRoute />}>
         <Route path='/admin/userlist' element={<UserListScreen />} />
         <Route path='/admin/formtest' element={<FormTestScreen />} />
+        <Route path='/admin/formtest2' element={<FormTestScreen2 />} />
         <Route path='/admin/user/:id/edit' element={<UserEditScreen />} />
       </Route>
     </Route>

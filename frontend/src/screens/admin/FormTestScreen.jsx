@@ -1,22 +1,21 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-import Message from '../../components/Message'
-import Loader from '../../components/Loader'
 import FormContainer from '../../components/FormContainer'
-import { toast } from 'react-toastify'
-
 import { formTestForm } from '../../forms/form-objects/formTestForm'
 import useForm from '../../forms/form-hooks/useForm'
 
 const FormTestScreen = () => {
+  const testForm = useForm(formTestForm)
   const {
     renderFormInputs,
     isFormValid,
     getFormValues,
-    setInitialState,
-    changesMade
-  } = useForm(formTestForm)
+    setInitialState
+    //changesMade
+  } = testForm
+
+  console.log(testForm)
 
   useEffect(() => {
     setInitialState({

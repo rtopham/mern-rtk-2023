@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react'
 import DataTable from './DataTable'
 import {
   Icon,
@@ -7,7 +6,6 @@ import {
   SORT_DESC_ICON
 } from '../../components/icons'
 
-import useSort from '../table-hooks/useSort'
 import './table.css'
 const ServerSortableTable = (props) => {
   const { data, config, sortBy, sortOrder, setSortColumn, keyFn } = props

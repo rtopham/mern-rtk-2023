@@ -7,8 +7,8 @@ import Loader from '../components/Loader'
 import { useRegisterMutation } from '../slices/usersApiSlice'
 import { setCredentials } from '../slices/authSlice'
 import { toast } from 'react-toastify'
-import useForm from '../forms/form-hooks/useForm'
-import { registerForm } from '../forms/form-objects/registerForm'
+import useForm from '../forms-2/form-hooks/useForm'
+import { registerForm } from '../forms-2/form-objects/registerForm'
 
 const RegisterScreen = () => {
   const initialState = {
@@ -17,7 +17,7 @@ const RegisterScreen = () => {
     password: '',
     confirmPassword: ''
   }
-  const { renderFormInputs, isFormValid, getFormValues } = useForm(
+  const { renderFormInputs, isFormValid, values } = useForm(
     registerForm,
     initialState
   )
@@ -39,7 +39,7 @@ const RegisterScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    const { name, email, password, confirmPassword } = getFormValues()
+    const { name, email, password, confirmPassword } = values
     //The following will never result in a toast error if submit button is disabled until passwords match
     if (password !== confirmPassword) {
       toast.error('Passwords do not match')
