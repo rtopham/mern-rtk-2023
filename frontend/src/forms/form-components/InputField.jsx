@@ -119,6 +119,7 @@ const InputField = (props) => {
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
+        isValid={isValid}
         {...rest}
       ></Form.Control>
       {errorMessage && !isValid && (

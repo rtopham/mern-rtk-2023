@@ -7,8 +7,8 @@ import Loader from '../components/Loader'
 import { useLoginMutation } from '../slices/usersApiSlice'
 import { setCredentials } from '../slices/authSlice'
 import { toast } from 'react-toastify'
-import { loginForm } from '../forms-2/form-objects/loginForm'
-import useForm from '../forms-2/form-hooks/useForm'
+import { loginForm } from '../forms/form-objects/loginForm'
+import useForm from '../forms/form-hooks/useForm'
 
 const LoginScreen = () => {
   const { renderFormInputs, isFormValid, values } = useForm(loginForm, {

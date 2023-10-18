@@ -7,8 +7,8 @@ import Loader from '../components/Loader'
 import { useRegisterMutation } from '../slices/usersApiSlice'
 import { setCredentials } from '../slices/authSlice'
 import { toast } from 'react-toastify'
-import useForm from '../forms-2/form-hooks/useForm'
-import { registerForm } from '../forms-2/form-objects/registerForm'
+import useForm from '../forms/form-hooks/useForm'
+import { registerForm } from '../forms/form-objects/registerForm'
 
 const RegisterScreen = () => {
   const initialState = {

@@ -1,52 +1,38 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import FormContainer from '../../components/FormContainer'
-import { formTestForm } from '../../forms/form-objects/formTestForm'
 import useForm from '../../forms/form-hooks/useForm'
+import { formTestForm } from '../../forms/form-objects/formTestForm'
 
 const FormTestScreen = () => {
-  const testForm = useForm(formTestForm)
-  const {
-    renderFormInputs,
-    isFormValid,
-    getFormValues,
-    setInitialState
-    //changesMade
-  } = testForm
+  const initialState = {
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    age: '',
+    role: true,
+    inlineRole: true,
+    inlineSexy: false,
+    party: 'Independent',
+    inlineParty: 'Democrat',
+    gender: 'Nonbinary',
+    inlineGender: 'Female',
+    lights: true,
+    color: '#f55696',
+    file: '',
+    height: 30
+  }
 
-  console.log(testForm)
-
-  useEffect(() => {
-    setInitialState({
-      name: 'Sara',
-      email: 'sara@gmail.com',
-      age: 25,
-      role: true,
-      inlineRole: true,
-      inlineSexy: true,
-      party: 'Republican',
-      inlineParty: 'Independent',
-      gender: 'Female',
-      inlineGender: 'Nonbinary',
-      lights: true,
-      color: '#ffffff'
-    })
-  }, [setInitialState])
-
-  /*   useEffect(() => {
-    if (user) {
-      setInitialState({
-        name: user.name,
-        email: user.email,
-        role: user.isAdmin
-      })
-    }
-  }, [setInitialState, user]) */
+  const { renderFormInputs, values, isFormValid, changesMade } = useForm(
+    formTestForm,
+    initialState
+  )
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    console.log(getFormValues())
+
+    console.log(values)
   }
 
   return (
@@ -55,24 +41,14 @@ const FormTestScreen = () => {
         Go Back
       </Link>
       <FormContainer>
-        <h1>Form Test</h1>
+        <h1>Form Test 2 (Custom)</h1>
 
         <Form onSubmit={submitHandler}>
           {renderFormInputs()}
           <Button
             type='submit'
             variant='primary'
-            disabled={
-              !isFormValid
-              /* !changesMade(
-                  {
-                    name: user.name,
-                    email: user.email,
-                    role: user.isAdmin
-                  },
-                  getFormValues()
-                ) */
-            }
+            disabled={!isFormValid() || !changesMade(initialState, values)}
           >
             Update
           </Button>

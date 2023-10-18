@@ -5,8 +5,8 @@ import Loader from '../components/Loader'
 import { useProfileMutation } from '../slices/usersApiSlice'
 import { setCredentials } from '../slices/authSlice'
 import FormContainer from '../components/FormContainer'
-import useForm from '../forms-2/form-hooks/useForm'
-import { updateProfileForm } from '../forms-2/form-objects/updateProfileForm'
+import useForm from '../forms/form-hooks/useForm'
+import { updateProfileForm } from '../forms/form-objects/updateProfileForm'
 
 const ProfileScreen = () => {
   const dispatch = useDispatch()

@@ -1,21 +1,26 @@
-import { createFormFieldConfig } from '../form-utils/createFormFieldConfig'
-import { email, password } from '../fields/authFields'
 import {
   requiredRule,
   validEmailRule,
   validPasswordRule
 } from '../form-utils/inputValidationRules'
 
-export const loginForm = {
-  email: {
-    ...createFormFieldConfig(email),
+import { email, password } from '../fields/authFields'
+
+export const loginForm = [
+  {
+    ...email,
+    required: true,
     validationRules: [
-      requiredRule('Email'),
-      validEmailRule('Email', 'Please enter a valid email address.')
+      requiredRule('Email', 'Please provide your email'),
+      validEmailRule('Email', 'Please provide a valid email.')
     ]
   },
-  password: {
-    ...createFormFieldConfig(password),
-    validationRules: [requiredRule('Password'), validPasswordRule('Password')]
+  {
+    ...password,
+    required: true,
+    validationRules: [
+      requiredRule('Password', 'Please provide a password'),
+      validPasswordRule('Password')
+    ]
   }
-}
+]

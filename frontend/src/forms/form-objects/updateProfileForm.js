@@ -1,5 +1,3 @@
-import { createFormFieldConfig } from '../form-utils/createFormFieldConfig'
-import { name, email, password, confirmPassword } from '../fields/authFields'
 import {
   requiredRule,
   minLengthRule,
@@ -8,30 +6,44 @@ import {
   passwordMatchRule
 } from '../form-utils/inputValidationRules'
 
-export const updateProfileForm = {
-  name: {
-    ...createFormFieldConfig(name),
+import {
+  name,
+  email,
+  password,
+  confirmPassword
+} from '../fields/formTestFields'
+
+export const updateProfileForm = [
+  {
+    ...name,
+    required: true,
+    autoFocus: true,
     validationRules: [
       requiredRule('Name', 'Please provide your name.'),
       minLengthRule('Name', 2, 'Name should be at least 2 characters long')
     ]
   },
-  email: {
-    ...createFormFieldConfig(email),
+  {
+    ...email,
+    required: true,
     validationRules: [
-      requiredRule('Email'),
-      validEmailRule('Email', 'Please enter a valid email address.')
+      requiredRule('Email', 'Please provide your email'),
+      validEmailRule('Email', 'Please provide a valid email.')
     ]
   },
-  password: {
-    ...createFormFieldConfig(password),
-    validationRules: [requiredRule('Password'), validPasswordRule('Password')]
-  },
-  confirmPassword: {
-    ...createFormFieldConfig(confirmPassword),
+  {
+    ...password,
+
     validationRules: [
-      requiredRule('Confirm Password'),
-      passwordMatchRule('Confirm Password')
+      requiredRule('Password', 'Please provide a password'),
+      validPasswordRule('Password')
+    ]
+  },
+  {
+    ...confirmPassword,
+    validationRules: [
+      requiredRule('Confirm Password', 'Please confirm your password'),
+      passwordMatchRule('Confirm Password', 'Passwords do not match')
     ]
   }
-}
+]

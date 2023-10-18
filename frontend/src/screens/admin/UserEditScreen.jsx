@@ -11,8 +11,8 @@ import {
   useGetUserDetailsQuery
 } from '../../slices/usersApiSlice'
 
-import { userEditForm } from '../../forms-2/form-objects/userEditForm'
-import useForm from '../../forms-2/form-hooks/useForm'
+import { userEditForm } from '../../forms/form-objects/userEditForm'
+import useForm from '../../forms/form-hooks/useForm'
 
 const UserEditScreen = () => {
   const { id: userId } = useParams()

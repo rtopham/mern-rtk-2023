@@ -1,125 +1,163 @@
 import { useState, useCallback } from 'react'
 
-function useForm(formObj, initialState) {
-  //let formObj = { ...formObject }
+import InputField from '../form-components/InputField'
 
-  /*   if (initialState) {
-    for (const key in initialState) {
-      const inputObj = { ...formObj[key] }
-      inputObj.value = initialState[key]
-      formObj = { ...formObj, [key]: inputObj }
-    }
-  } */
+const useForm = (inputArray, initialValues) => {
+  let initialTouched = {}
+  let initialValidity = {}
+  let initialErrors = {}
 
-  const [form, setForm] = useState(formObj)
+  inputArray.forEach((input) => {
+    initialTouched[input.name] = false
+    initialValidity[input.name] = false
+    initialErrors[input.name] = ''
+  })
 
-  const setInitialState = useCallback(
-    (initialState) => {
-      let updatedForm = { ...formObj }
-      for (const key in initialState) {
-        const inputObj = { ...updatedForm[key] }
+  const [values, setValues] = useState(initialValues)
+  const [touched, setTouched] = useState(initialTouched)
+  const [valid, setValid] = useState(initialValidity)
+  const [errors, setErrors] = useState(initialValidity)
+  const [initialStateValues, setInitialStateValues] = useState(initialValues)
 
-        inputObj.value = initialState[key]
+  const renderInput = (field, handleChange, value, isValid, error, key) => {
+    const { validationRules, ...rest } = field
+    return (
+      <InputField
+        {...rest}
+        key={key}
+        isValid={isValid}
+        value={value}
+        handleChange={handleChange}
+        errorMessage={error}
+      />
+    )
+  }
 
-        updatedForm = { ...updatedForm, [key]: inputObj }
-      }
-      setForm(updatedForm)
-    },
-    [formObj]
-  )
+  const renderFormInputs = () => {
+    return inputArray.map((field) => {
+      const { label } = field
 
-  function renderFormInputs() {
-    return Object.values(form).map((inputObj) => {
-      const { value, label, errorMessage, valid, renderInput } = inputObj
-      return renderInput(onInputChange, value, valid, errorMessage, label)
+      return renderInput(
+        field,
+        onChange,
+        values[field.name],
+        valid[field.name],
+        errors[field.name],
+        label
+      )
     })
   }
 
   const isInputFieldValid = useCallback(
-    (inputField) => {
-      for (const rule of inputField.validationRules) {
-        if (!rule.validate(inputField.value, form)) {
-          inputField.errorMessage = rule.message
+    (inputName, inputValue) => {
+      const inputObject = inputArray.find((input) => {
+        return input.name === inputName
+      })
+
+      for (const rule of inputObject.validationRules) {
+        if (!rule.validate(inputValue, values)) {
+          setErrors((prevState) => ({
+            ...prevState,
+            [inputName]: rule.message
+          }))
           return false
         }
       }
 
       return true
     },
-    [form]
+    [inputArray, values]
   )
 
-  const onInputChange = useCallback(
-    (event) => {
-      const { name, value, type, checked } = event.target
-      // copy input object whose value was changed
-      const inputObj = { ...form[name] }
-      // update value
-      if (type === 'checkbox') {
-        inputObj.value = checked
-      } else inputObj.value = value
-
-      // update input field's validity
-      const isValidInput = isInputFieldValid(inputObj)
-      // if input is valid and it was previously set to invalid
-      // set its valid status to true
-      if (isValidInput && !inputObj.valid) {
-        inputObj.valid = true
-      } else if (!isValidInput && inputObj.valid) {
-        // if input is not valid and it was previously valid
-        // set its valid status to false
-        inputObj.valid = false
+  const onChange = useCallback(
+    (e) => {
+      switch (e.target.type) {
+        case 'checkbox':
+        case 'switch':
+          setValues((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.checked
+          }))
+          break
+        case 'blockpicker':
+          setValues((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.hex
+          }))
+          break
+        default:
+          setValues((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value
+          }))
       }
 
+      // update input field's validity
+      const isValidInput = isInputFieldValid(e.target.name, e.target.value)
+
+      // if input is valid and it was previously set to invalid
+      // set its valid status to true
+      if (isValidInput && !valid[e.target.name]) {
+        setValid((prevState) => ({
+          ...prevState,
+          [e.target.name]: true
+        }))
+      } else if (!isValidInput && valid[e.target.name]) {
+        // if input is not valid and it was previously valid
+        // set its valid status to false
+        setValid((prevState) => ({
+          ...prevState,
+          [e.target.name]: false
+        }))
+      }
       // mark input field as touched
-      inputObj.touched = true
-      setForm({ ...form, [name]: inputObj })
+      setTouched((prevState) => ({
+        ...prevState,
+        [e.target.name]: true
+      }))
     },
-    [form, isInputFieldValid]
+    [setValues, valid, isInputFieldValid]
   )
 
-  /**
-   * returns boolean value indicating whether overall form is valid
-   *
-   * @param {object} formObj - object representation of a form
-   */
   const isFormValid = useCallback(() => {
     let isValid = true
-    const arr = Object.values(form)
+    const arr = Object.values(valid)
 
     for (let i = 0; i < arr.length; i++) {
-      if (!arr[i].valid) {
+      if (!arr[i] && inputArray[i].required) {
         isValid = false
         break
       }
     }
 
     return isValid
-  }, [form])
+  }, [valid, inputArray])
 
-  //returns a boolean value indicating whether overall form has changed
-
-  const changesMade = (oldValues, newValues) => {
-    return JSON.stringify(oldValues) !== JSON.stringify(newValues)
+  const reset = () => {
+    setValues(initialStateValues)
   }
 
-  //return a simple object with input values for ease of use
+  const setInitialState = useCallback((initialState) => {
+    setValues(initialState)
+    setInitialStateValues(initialState)
+  }, [])
 
-  const getFormValues = useCallback(() => {
-    const values = Object.fromEntries(
-      Object.entries(form).map((entry) => {
-        return [entry[0], entry[1].value]
-      })
-    )
-    return values
-  }, [form])
+  const changesMade = (oldValues, newValues) => {
+    //returns a boolean value indicating whether overall form has changed
+    return JSON.stringify(oldValues) !== JSON.stringify(newValues)
+  }
 
   return {
     renderFormInputs,
     isFormValid,
-    getFormValues,
-    setInitialState,
-    changesMade
+    changesMade,
+    initialStateValues,
+    values,
+    touched,
+    valid,
+    errors,
+    reset,
+    setInitialState
   }
 }
 

@@ -2,14 +2,16 @@ export const name = {
   name: 'name',
   type: 'text',
   label: 'Name',
-  placeholder: 'Enter name'
+  placeholder: 'Enter name',
+  spellCheck: false
 }
 
 export const email = {
   name: 'email',
   type: 'email',
   label: 'Email',
-  placeholder: 'Enter email address'
+  placeholder: 'Enter email address',
+  spellCheck: false
 }
 
 export const password = {

@@ -1,4 +1,12 @@
-import { createFormFieldConfig } from '../form-utils/createFormFieldConfig'
+import {
+  requiredRule,
+  minLengthRule,
+  validEmailRule,
+  validPasswordRule,
+  passwordMatchRule,
+  minMaxRule
+} from '../form-utils/inputValidationRules'
+
 import {
   name,
   email,
@@ -18,87 +26,86 @@ import {
   height
 } from '../fields/formTestFields'
 
-import {
-  requiredRule,
-  minLengthRule,
-  validEmailRule,
-  validPasswordRule,
-  passwordMatchRule
-} from '../form-utils/inputValidationRules'
-
-export const formTestForm = {
-  name: {
-    ...createFormFieldConfig(name),
+export const formTestForm = [
+  {
+    ...name,
+    required: true,
+    autoFocus: true,
     validationRules: [
       requiredRule('Name', 'Please provide your name.'),
       minLengthRule('Name', 2, 'Name should be at least 2 characters long')
     ]
   },
-  email: {
-    ...createFormFieldConfig(email),
+  {
+    ...email,
+    required: true,
     validationRules: [
-      requiredRule('Email'),
-      validEmailRule('Email', 'Please enter a valid email address.')
+      requiredRule('Email', 'Please provide your email'),
+      validEmailRule('Email', 'Please provide a valid email.')
     ]
   },
-  password: {
-    ...createFormFieldConfig(password),
-    validationRules: [requiredRule('Password'), validPasswordRule('Password')]
-  },
-  confirmPassword: {
-    ...createFormFieldConfig(confirmPassword),
+  {
+    ...password,
+    required: true,
     validationRules: [
-      requiredRule('Confirm Password'),
-      passwordMatchRule('Confirm Password')
+      requiredRule('Password', 'Please provide a password'),
+      validPasswordRule('Password')
     ]
   },
-  age: {
-    ...createFormFieldConfig(age),
+  {
+    ...confirmPassword,
+    required: true,
+    validationRules: [
+      requiredRule('Confirm Password', 'Please confirm your password'),
+      passwordMatchRule('Confirm Password', 'Passwords do not match')
+    ]
+  },
+  {
+    ...age,
+    validationRules: [minMaxRule('Age', 0, 110)]
+  },
+  {
+    ...role,
     validationRules: []
   },
-
-  role: {
-    ...createFormFieldConfig(role),
+  {
+    ...inlineRole,
     validationRules: []
   },
-  inlineRole: {
-    ...createFormFieldConfig(inlineRole),
+  {
+    ...inlineSexy,
     validationRules: []
   },
-  inlineSexy: {
-    ...createFormFieldConfig(inlineSexy),
+  {
+    ...party,
     validationRules: []
   },
-  party: {
-    ...createFormFieldConfig(party),
+  {
+    ...inlineParty,
     validationRules: []
   },
-  inlineParty: {
-    ...createFormFieldConfig(inlineParty),
+  {
+    ...gender,
     validationRules: []
   },
-  gender: {
-    ...createFormFieldConfig(gender),
+  {
+    ...inlineGender,
     validationRules: []
   },
-  inlineGender: {
-    ...createFormFieldConfig(inlineGender),
+  {
+    ...lights,
     validationRules: []
   },
-  lights: {
-    ...createFormFieldConfig(lights),
+  {
+    ...color,
     validationRules: []
   },
-  color: {
-    ...createFormFieldConfig(color),
+  {
+    ...file,
     validationRules: []
   },
-  file: {
-    ...createFormFieldConfig(file),
-    validationRules: []
-  },
-  height: {
-    ...createFormFieldConfig(height),
+  {
+    ...height,
     validationRules: []
   }
-}
+]
